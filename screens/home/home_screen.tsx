@@ -4,7 +4,10 @@ import Header from '../components/header';
 import ListCategory from './list_category';
 import ListProduct from './list_product';
 
-const HomeScreen = () => {
+const HomeScreen = ({route}:any) => {
+
+  // const {itemId, otherParams} = route.params
+
   return (
     <View style={styles.container}>
       <Header />

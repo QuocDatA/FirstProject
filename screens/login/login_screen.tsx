@@ -3,13 +3,13 @@ import { SafeAreaView, StatusBar, StyleSheet} from "react-native";
 import Title from "./title";
 import Form from "./form";
 
-const LoginScreen = ()=> {
+const LoginScreen = ({navigation}:any)=> {
 
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor={'white'} barStyle={'dark-content'}></StatusBar>
             <Title/>
-            <Form/>
+            <Form navigation={navigation}/>
         </SafeAreaView>
     )
 }

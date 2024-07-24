@@ -1,27 +1,44 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import More from '../components/more';
-import {FlatList, Image, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {useSafeAreaFrame} from 'react-native-safe-area-context';
+import FastImage from 'react-native-fast-image';
+import Waiting from '../components/waiting';
 
 const ListProduct = () => {
-  const listTest = [
-    {id: 1},
-    {id: 2},
-    {id: 3},
-    {id: 4},
-    {id: 5},
-    {id: 6},
-    {id: 7},
-    {id: 8},
-  ];
+  const [games, setGames] = useState();
+  const [isLoading, setLoading] = useState(true);
 
-  const renderItem = ({}) => (
+  const getApi = async () => {
+    try {
+      const response = await fetch(
+        'https://66a0a96b7053166bcabc32a4.mockapi.io/product',
+      );
+      const data = await response.json();
+      setGames(data);
+      console.log(data[0].avatar);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    getApi();
+  }, []);
+
+  const renderItem = ({item}: any) => (
     <View style={styles.item}>
-      <Image
-        source={require('../../assets/images/logo.png')}
-        style={styles.image}
-      />
+      <FastImage source={{uri: item.avatar}} style={styles.image} />
       <View style={styles.desc}>
-        <Text style={styles.desc_text}>Demo</Text>
+        <Text style={styles.desc_text}>{item.name}</Text>
       </View>
     </View>
   );
@@ -30,13 +47,17 @@ const ListProduct = () => {
     <>
       <More title={'Sản phẩm'} />
       <View style={styles.container}>
-        <FlatList
-          columnWrapperStyle={styles.row}
-          numColumns={2}
-          scrollEnabled={false}
-          data={listTest}
-          renderItem={renderItem}
-        />
+        {isLoading ? (
+          <Waiting />
+        ) : (
+          <FlatList
+            columnWrapperStyle={styles.row}
+            numColumns={2}
+            scrollEnabled={false}
+            data={games}
+            renderItem={renderItem}
+          />
+        )}
       </View>
     </>
   );
